@@ -46,12 +46,12 @@ ESPHome component to monitor and control a APC UPS via RS232 with MQTT
 
 ### MAX3232
 
-| Pin          | Label        | ESPHome     | ESP8266 example  | ESP32 example | ESP-01   |
-| :----------- | :----------- | :---------- | :--------------- | :------------ | :---     |
-| P11 (DIN1)   | TXD          | `tx_pin`    | `GPIO4`          | `GPIO16`      | `GPIO1`  |
-| P12 (ROUT1)  | RXD          | `rx_pin`    | `GPIO5`          | `GPIO17`      | `GPIO3`  |
-| P16 (VCC)    | VCC          |             |                  |               |          |
-| P15 (GND)    | GND          |             |                  |               |          |
+| Pin          | Label        | ESPHome     | ESP8266 | ESP32    | ESP-01   |
+| :----------- | :----------- | :---------- | :------ | :------- | :---     |
+| P11 (DIN1)   | TXD          | `tx_pin`    | `GPIO4` | `GPIO16` | `GPIO1`  |
+| P12 (ROUT1)  | RXD          | `rx_pin`    | `GPIO5` | `GPIO17` | `GPIO3`  |
+| P16 (VCC)    | VCC          |             |         |          |          |
+| P15 (GND)    | GND          |             |         |          |          |
 
 ## Installation
 
@@ -132,32 +132,6 @@ esphome run esp32-example.yaml
 ## Protocol
 
 See [kirbah.github.io/apc-ups/](https://kirbah.github.io/apc-ups/).
-
-## Known issues
-
-None.
-
-## Debugging
-
-If this component doesn't work out of the box for your device please update your configuration to increase the log level to see details about the UART traffic:
-
-```
-logger:
-  level: DEBUG
-
-uart:
-  - id: uart_0
-    baud_rate: 2400
-    tx_pin: ${tx_pin}
-    rx_pin: ${rx_pin}
-    debug:
-      direction: BOTH
-      dummy_receiver: false
-      after:
-        delimiter: "\r"
-      sequence:
-        - lambda: UARTDebug::log_string(direction, bytes);
-```
 
 ## References
 
