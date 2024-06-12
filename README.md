@@ -6,12 +6,13 @@
 ![GitHub watchers](https://img.shields.io/github/watchers/syssi/esphome-apc-ups)
 [!["Buy Me A Coffee"](https://img.shields.io/badge/buy%20me%20a%20coffee-donate-yellow.svg)](https://www.buymeacoffee.com/syssi)
 
-ESPHome component to monitor and control a APC UPS via RS232
+ESPHome component to monitor and control a APC UPS via RS232 with MQTT
 
 ## Supported devices
 
 * APC SU420INET (firmware `21.3.I`)
 * APC SUVS420I (firmware `42.L.I`)
+* APC SUA1000I (firmware `652.13.I`)
 
 ## Requirements
 
@@ -22,37 +23,35 @@ ESPHome component to monitor and control a APC UPS via RS232
 
 ```
                  RS232                     UART-TTL
-┌───────────┐              ┌──────────┐                ┌─────────┐
-│           │              │          │<----- RX ----->│         │
-│           │<---- TX ---->│  RS232   │<----- TX ----->│ ESP32/  │
-│  APC UPS  │<---- RX ---->│  to TTL  │<----- GND ---->│ ESP8266 │
-│           │<---- GND --->│  module  │<-- 3.3V VCC -->│         │<--- VCC
-│           │              │          │                │         │<--- GND
-└───────────┘              └──────────┘                └─────────┘
+┌───────────┐             ┌──────────┐               ┌─────────┐
+│           │<--- TX -----│  RS232   │<---- TX ------│         │
+│           │---- RX ---->│  to TTL  │----- RX ----->│ ESP32/  │
+│  APC UPS  │<--- GND --->│  module  │<---- GND ---->│ ESP8266 │
+│           │             |          |<-- 3.3V VCC --│         │
+│           │             └──────────┘               │         │
+│           │             ┌──────────┐               │         │
+│           │<--- GND --->│  DC-DC   │<---- GND ---->│         │
+│           │---- 24V --->|  XL1509  │-- 3.3V VCC -->│         │
+└───────────┘             └──────────┘               └─────────┘
 ```
 
 ### D-SUB 9P connector
 
-| Pin | Purpose      | MAX3232 pin       |
-|:---:| :----------- | :---------------- |
-|  1  | RX           | P14 (DOUT1)       |
-|  2  | TX           | P13 (RIN1)        |
-|  3  |              |                   |
-|  4  |              |                   |
-|  5  |              |                   |
-|  6  |              |                   |
-|  7  |              |                   |
-|  8  |              |                   |
-|  9  | GND          | P15 (GND)         |
+| UPS pin            | RS232 to TTL pin | MAX3232 pin        |
+| :----------------- | :--------------- | :----------------- |
+| RX (pin 1)         | RX (pin 2)       | P14 (DOUT1)        |
+| TX (pin 2)         | TX (pin 3)       | P13 (RIN1)         |
+| GND (pin 4, 9)     | GND (pin 5)      | P15 (GND)          |
+| 24V battery (pin8) | 24V (free pin 9) | connected to DC-DC |
 
 ### MAX3232
 
-| Pin          | Label        | ESPHome     | ESP8266 example  | ESP32 example |
-| :----------- | :----------- | :---------- | :--------------- | :------------ |
-| P11 (DIN1)   | TXD          | `tx_pin`    | `GPIO4`          | `GPIO16`      |
-| P12 (ROUT1)  | RXD          | `rx_pin`    | `GPIO5`          | `GPIO17`      |
-| P16 (VCC)    | VCC          |             |                  |               |
-| P15 (GND)    | GND          |             |                  |               |
+| Pin          | Label        | ESPHome     | ESP8266 example  | ESP32 example | ESP-01   |
+| :----------- | :----------- | :---------- | :--------------- | :------------ | :---     |
+| P11 (DIN1)   | TXD          | `tx_pin`    | `GPIO4`          | `GPIO16`      | `GPIO1`  |
+| P12 (ROUT1)  | RXD          | `rx_pin`    | `GPIO5`          | `GPIO17`      | `GPIO3`  |
+| P16 (VCC)    | VCC          |             |                  |               |          |
+| P15 (GND)    | GND          |             |                  |               |          |
 
 ## Installation
 
