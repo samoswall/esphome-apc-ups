@@ -8,7 +8,7 @@ from .. import APC_UPS_COMPONENT_SCHEMA, CONF_APC_UPS_ID, apc_ups_ns
 DEPENDENCIES = ["uart"]
 
 # CONF_BEEPER = "beeper"
-CONF_FRONT_PANEL_TEST = "beeper"
+CONF_FRONT_PANEL_TEST = "front_panel_test"
 CONF_QUICK_TEST = "quick_test"
 CONF_DEEP_TEST = "deep_test"
 CONF_TEN_MINUTES_TEST = "ten_minutes_test"
