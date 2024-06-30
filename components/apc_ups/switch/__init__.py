@@ -14,7 +14,7 @@ CONF_DEEP_TEST = "deep_test"
 CONF_TEN_MINUTES_TEST = "ten_minutes_test"
 
 TYPES = {
-    CONF_FRONT_PANEL_TEST: ("A", "A"),
+    CONF_FRONT_PANEL_TEST: ("A", "OK"),
     CONF_BEEPER: ("Q", "Q"),
     CONF_QUICK_TEST: ("T", "CT"),
     CONF_DEEP_TEST: ("TL", "CT"),
