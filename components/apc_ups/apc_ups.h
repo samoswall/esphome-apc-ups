@@ -126,6 +126,12 @@ class ApcUps : public uart::UARTDevice, public PollingComponent {
   APC_UPS_SENSOR(ambient_temperature, LOWER_T, t, float)
   APC_UPS_VALUED_TEXT_SENSOR(last_battery_change_date, LOWER_X, x, std::string)
 
+//  APC_UPS_SWITCH(beeper, A, A)
+  APC_UPS_SWITCH(front_panel_test, A, A)
+  APC_UPS_SWITCH(quick_test, W, W)
+  APC_UPS_SWITCH(deep_test, D, D)
+  APC_UPS_SWITCH(ten_minutes_test, U, U)
+
   void switch_command(const std::string &command);
   void setup() override;
   void loop() override;
