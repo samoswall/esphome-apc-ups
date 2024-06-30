@@ -125,7 +125,6 @@ class ApcUps : public uart::UARTDevice, public PollingComponent {
   APC_UPS_SENSOR(estimated_runtime, LOWER_J, j, float)
   APC_UPS_SENSOR(low_transfer_voltage, LOWER_L, l, float)
   APC_UPS_SENSOR(nominal_output_voltage, LOWER_O, o, float)
-  APC_UPS_SENSOR(ambient_temperature, LOWER_T, t, float)
   APC_UPS_SENSOR(upper_transfer_voltage, LOWER_U, u, float)
 
   APC_UPS_VALUED_TEXT_SENSOR(old_firmware_version, V, V, std::string)
