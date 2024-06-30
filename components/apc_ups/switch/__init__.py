@@ -21,7 +21,7 @@ TYPES = {
     CONF_TEN_MINUTES_TEST: ("T10", "CT"),
 }
 
-ApcUpsSwitch = apc_ups.class_("ApcUpsSwitch", switch.Switch, cg.Component)
+ApcUpsSwitch = apc_ups_ns.class_("ApcUpsSwitch", switch.Switch, cg.Component)
 
 PIPSWITCH_SCHEMA = switch.switch_schema(
     ApcUpsSwitch, icon=ICON_POWER, block_inverted=True
