@@ -70,6 +70,12 @@ void ApcUps::loop() {
       case POLLING_L:
         this->publish_state_(this->grid_voltage_, value_grid_voltage_);
         break;
+      case POLLING_M:
+        this->publish_state_(this->max_grid_voltage_, value_max_grid_voltage_);
+        break;
+      case POLLING_N:
+        this->publish_state_(this->min_grid_voltage_, value_min_grid_voltage_);
+        break;
       case POLLING_O:
         this->publish_state_(this->ac_output_voltage_, value_ac_output_voltage_);
         break;
@@ -87,6 +93,12 @@ void ApcUps::loop() {
         this->publish_state_(this->battery_low_, check_bit_(value_status_bitmask_, 64));
         this->publish_state_(this->replace_battery_, check_bit_(value_status_bitmask_, 128));
         break;
+       case POLLING_X:
+        this->publish_state_(this->self_test_results_, value_self_test_results_);
+        break;        
+      case POLLING_V:
+        this->publish_state_(this->old_firmware_version_, value_old_firmware_version_);
+        break;
       case POLLING_LOWER_A:
         this->publish_state_(this->protocol_info_, value_protocol_info_);
         break;
@@ -96,21 +108,54 @@ void ApcUps::loop() {
       case POLLING_LOWER_C:
         this->publish_state_(this->local_identifier_, value_local_identifier_);
         break;
+      case POLLING_LOWER_E:
+        this->publish_state_(this->return_threshold_, value_return_threshold_);
+        break;
       case POLLING_LOWER_F:
         this->publish_state_(this->state_of_charge_, value_state_of_charge_);
+        break;
+      case POLLING_LOWER_G:
+        this->publish_state_(this->nominal_battery_voltage_, value_nominal_battery_voltage_);
+        break;  
+      case POLLING_LOWER_H:
+        this->publish_state_(this->ambient_humidity_, value_ambient_humidity_);
         break;
       case POLLING_LOWER_J:
         this->publish_state_(this->estimated_runtime_, value_estimated_runtime_);
         break;
+      case POLLING_LOWER_K:
+        this->publish_state_(this->alarm_delay_, value_alarm_delay_);
+        break; 
+      case POLLING_LOWER_L:
+        this->publish_state_(this->low_transfer_voltage_, value_low_transfer_voltage_);
+        break;
       case POLLING_LOWER_M:
         this->publish_state_(this->manufacture_date_, value_manufacture_date_);
+        break;
+      case POLLING_LOWER_N:
+        this->publish_state_(this->serial_number_, value_serial_number_);
+        break;
+      case POLLING_LOWER_O:
+        this->publish_state_(this->nominal_output_voltage_, value_nominal_output_voltage_);
         break;
       case POLLING_LOWER_T:
         this->publish_state_(this->ambient_temperature_, value_ambient_temperature_);
         break;
+      case POLLING_LOWER_U:
+        this->publish_state_(this->upper_transfer_voltage_, value_upper_transfer_voltage_);
+        break;
+      case POLLING_LOWER_V:
+        this->publish_state_(this->measure_upc_firmware_, value_measure_upc_firmware_);
+        break;
       case POLLING_LOWER_X:
         this->publish_state_(this->last_battery_change_date_, value_last_battery_change_date_);
         break;
+      case POLLING_LOWER_Y:
+        this->publish_state_(this->alarm_delay_, value_alarm_delay_);
+        break;   
+      case POLLING_9:
+        this->publish_state_(this->line_quality_, value_line_quality_);
+        break; 
       default:
         ESP_LOGD(TAG, "Response not implemented");
         break;
@@ -158,6 +203,18 @@ void ApcUps::loop() {
         sscanf(tmp, "%f", &value_grid_voltage_);  // NOLINT
         this->state_ = STATE_POLL_DECODED;
         break;
+      case POLLING_M:
+        ESP_LOGD(TAG, "Decode M");
+        // "231.8\r\n"
+        sscanf(tmp, "%f", &value_max_grid_voltage_);  // NOLINT
+        this->state_ = STATE_POLL_DECODED;
+        break;
+      case POLLING_N:
+        ESP_LOGD(TAG, "Decode N");
+        // "231.8\r\n"
+        sscanf(tmp, "%f", &value_min_grid_voltage_);  // NOLINT
+        this->state_ = STATE_POLL_DECODED;
+        break;
       case POLLING_O:
         ESP_LOGD(TAG, "Decode O");
         // "231.8\r\n"
@@ -170,10 +227,21 @@ void ApcUps::loop() {
         sscanf(tmp, "%f", &value_ac_output_load_);  // NOLINT
         this->state_ = STATE_POLL_DECODED;
         break;
+      case POLLING_V:
+        ESP_LOGD(TAG, "Decode V");
+        this->value_old_firmware_version_ = tmp;
+        this->state_ = STATE_POLL_DECODED;
+        break; 
       case POLLING_Q:
         ESP_LOGD(TAG, "Decode Q");
         // "08\r\n"
         sscanf(tmp, "%x", &value_status_bitmask_);  // NOLINT
+        this->state_ = STATE_POLL_DECODED;
+        break;
+      case POLLING_X:
+        ESP_LOGD(TAG, "Decode X");
+        // OK
+        this->value_self_test_results_ = tmp;
         this->state_ = STATE_POLL_DECODED;
         break;
       case POLLING_LOWER_A:
@@ -194,10 +262,28 @@ void ApcUps::loop() {
         this->value_local_identifier_ = tmp;
         this->state_ = STATE_POLL_DECODED;
         break;
+      case POLLING_LOWER_E:
+        ESP_LOGD(TAG, "Decode e");
+        // "53.8\r\n"
+        sscanf(tmp, "%f", &value_return_threshold_);  // NOLINT
+        this->state_ = STATE_POLL_DECODED;
+        break;
       case POLLING_LOWER_F:
         ESP_LOGD(TAG, "Decode f");
         // "100.0\r\n"
         sscanf(tmp, "%f", &value_state_of_charge_);  // NOLINT
+        this->state_ = STATE_POLL_DECODED;
+        break;
+      case POLLING_LOWER_G:
+        ESP_LOGD(TAG, "Decode g");
+        // "53.8\r\n"
+        sscanf(tmp, "%f", &value_nominal_battery_voltage_);  // NOLINT
+        this->state_ = STATE_POLL_DECODED;
+        break;
+      case POLLING_LOWER_H:
+        ESP_LOGD(TAG, "Decode h");
+        // "100.0\r\n"
+        sscanf(tmp, "%f", &value_ambient_humidity_);  // NOLINT
         this->state_ = STATE_POLL_DECODED;
         break;
       case POLLING_LOWER_J:
@@ -206,10 +292,34 @@ void ApcUps::loop() {
         sscanf(tmp, "%f:", &value_estimated_runtime_);  // NOLINT
         this->state_ = STATE_POLL_DECODED;
         break;
+      case POLLING_LOWER_K:
+        ESP_LOGD(TAG, "Decode k");
+        // alarm
+        this->value_alarm_delay_ = tmp;
+        this->state_ = STATE_POLL_DECODED;
+        break;
+      case POLLING_LOWER_L:
+        ESP_LOGD(TAG, "Decode l");
+        // "80.5\r\n"
+        sscanf(tmp, "%f", &value_low_transfer_voltage_);  // NOLINT
+        this->state_ = STATE_POLL_DECODED;
+        break;
       case POLLING_LOWER_M:
         ESP_LOGD(TAG, "Decode m");
         // "11/29/96\r\n"
         this->value_manufacture_date_ = tmp;
+        this->state_ = STATE_POLL_DECODED;
+        break;
+      case POLLING_LOWER_N:
+        ESP_LOGD(TAG, "Decode n");
+        // "11/29/96\r\n"
+        this->value_serial_number_ = tmp;
+        this->state_ = STATE_POLL_DECODED;
+        break;
+      case POLLING_LOWER_O:
+        ESP_LOGD(TAG, "Decode o");
+        // "80.5\r\n"
+        sscanf(tmp, "%f", &value_nominal_output_voltage_);  // NOLINT
         this->state_ = STATE_POLL_DECODED;
         break;
       case POLLING_LOWER_T:
@@ -218,10 +328,34 @@ void ApcUps::loop() {
         sscanf(tmp, "%f", &value_ambient_temperature_);  // NOLINT
         this->state_ = STATE_POLL_DECODED;
         break;
+      case POLLING_LOWER_U:
+        ESP_LOGD(TAG, "Decode u");
+        // "80.5\r\n"
+        sscanf(tmp, "%f", &value_upper_transfer_voltage_);  // NOLINT
+        this->state_ = STATE_POLL_DECODED;
+        break;   
+      case POLLING_LOWER_V:
+        ESP_LOGD(TAG, "Decode v");
+        // alarm
+        this->value_alarm_delay_ = tmp;
+        this->state_ = STATE_POLL_DECODED;
+        break;
       case POLLING_LOWER_X:
         ESP_LOGD(TAG, "Decode x");
         // "11/29/96\r\n"
         this->value_last_battery_change_date_ = tmp;
+        this->state_ = STATE_POLL_DECODED;
+        break;
+      case POLLING_LOWER_Y:
+        ESP_LOGD(TAG, "Decode y");
+        // copyright_notice
+        this->value_copyright_notice_ = tmp;
+        this->state_ = STATE_POLL_DECODED;
+        break;  
+      case POLLING_9:
+        ESP_LOGD(TAG, "Decode 9");
+        // line_quality
+        this->value_line_quality_ = tmp;
         this->state_ = STATE_POLL_DECODED;
         break;
       default:
@@ -311,7 +445,7 @@ uint8_t ApcUps::send_next_command_() {
 }
 
 void ApcUps::send_next_poll_() {
-  this->last_polling_command_ = (this->last_polling_command_ + 1) % 15;
+  this->last_polling_command_ = (this->last_polling_command_ + 1) % 32;
   if (this->used_polling_commands_[this->last_polling_command_].length == 0) {
     this->last_polling_command_ = 0;
   }
