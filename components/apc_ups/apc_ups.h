@@ -86,7 +86,9 @@ struct PollingCommand {
 
 #define APC_UPS_SENSOR(name, ident, polling_command, value_type) \
   APC_UPS_VALUED_ENTITY_(sensor::Sensor, name, ident, polling_command, value_type)
-#define APC_UPS_SWITCH(name, polling_command) APC_UPS_ENTITY_(switch_::Switch, name, ident, polling_command)
+// #define APC_UPS_SWITCH(name, polling_command) APC_UPS_ENTITY_(switch_::Switch, name, ident, polling_command)
+#define APC_UPS_SWITCH(name, ident,polling_command) \
+  APC_UPS_ENTITY_(switch_::Switch, name, ident, polling_command)
 #define APC_UPS_VALUED_BINARY_SENSOR(name, ident, polling_command, value_type) \
   APC_UPS_VALUED_ENTITY_(binary_sensor::BinarySensor, name, ident, polling_command, value_type)
 #define APC_UPS_BINARY_SENSOR(name, ident, polling_command) \
