@@ -86,9 +86,8 @@ struct PollingCommand {
 
 #define APC_UPS_SENSOR(name, ident, polling_command, value_type) \
   APC_UPS_VALUED_ENTITY_(sensor::Sensor, name, ident, polling_command, value_type)
-#define APC_UPS_SWITCH(name, ident, polling_command) APC_UPS_ENTITY_(switch_::Switch, name, ident, polling_command)
-// #define APC_UPS_SWITCH(name, ident,polling_command) \
-//  APC_UPS_ENTITY_(switch_::Switch, name, ident, polling_command)
+#define APC_UPS_SWITCH(name, ident,polling_command) \
+  APC_UPS_ENTITY_(switch_::Switch, name, ident, polling_command)
 #define APC_UPS_VALUED_BINARY_SENSOR(name, ident, polling_command, value_type) \
   APC_UPS_VALUED_ENTITY_(binary_sensor::BinarySensor, name, ident, polling_command, value_type)
 #define APC_UPS_BINARY_SENSOR(name, ident, polling_command) \
@@ -126,7 +125,6 @@ class ApcUps : public uart::UARTDevice, public PollingComponent {
   APC_UPS_SENSOR(low_transfer_voltage, LOWER_L, l, float)
   APC_UPS_SENSOR(nominal_output_voltage, LOWER_O, o, float)
   APC_UPS_SENSOR(upper_transfer_voltage, LOWER_U, u, float)
-
   APC_UPS_VALUED_TEXT_SENSOR(old_firmware_version, V, V, std::string)
   APC_UPS_VALUED_TEXT_SENSOR(self_test_results, X, X, std::string)
   APC_UPS_VALUED_TEXT_SENSOR(protocol_info, LOWER_A, a, std::string)
@@ -140,9 +138,7 @@ class ApcUps : public uart::UARTDevice, public PollingComponent {
   APC_UPS_VALUED_TEXT_SENSOR(last_battery_change_date, LOWER_X, x, std::string)
   APC_UPS_VALUED_TEXT_SENSOR(copyright_notice, LOWER_Y, Y, std::string)
   APC_UPS_VALUED_TEXT_SENSOR(line_quality, 9 , 9, std::string)
-
-  // APC_UPS_SWITCH(beeper, A, A)
-
+  APC_UPS_SWITCH(beeper, A, A)
   APC_UPS_SWITCH(quick_test, W, W)
   APC_UPS_SWITCH(deep_test, D, D)
   APC_UPS_SWITCH(ten_minutes_test, U, U)
