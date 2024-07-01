@@ -38,7 +38,7 @@ async def to_code(config):
             conf = config[type]
             var = await switch.new_switch(conf)
             await cg.register_component(var, conf)
-            #cg.add(getattr(paren, f"set_{type}")(var))
+            # cg.add(getattr(paren, f"set_{type}")(var))
             cg.add(getattr(paren, f"set_{type}_switch")(var))
             cg.add(var.set_parent(paren))
             cg.add(var.set_on_command(on))
