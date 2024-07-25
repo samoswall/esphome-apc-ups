@@ -158,7 +158,6 @@ class ApcUps : public uart::UARTDevice, public PollingComponent {
   void dump_config() override;
   void update() override;
   
-  void set_last_battery_change_date_select(select::Select *selector) { this->set_last_battery_change_date_select_ = selector; };
 
  protected:
   static const size_t APC_UPS_READ_BUFFER_LENGTH = 110;  // maximum supported answer length
